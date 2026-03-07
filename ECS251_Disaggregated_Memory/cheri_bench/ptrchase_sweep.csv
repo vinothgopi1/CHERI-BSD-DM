@@ -1,0 +1,6 @@
+bench,name,N,iters,steps,ns_total,ns_per_op,checksum
+ptrchase,ptrchase,10000,5,50000,4710100,94.202,299970000
+bench,name,N,iters,steps,ns_total,ns_per_op,checksum
+ptrchase,ptrchase,100000,5,500000,49540800,99.082,29999700000
+bench,name,N,iters,steps,ns_total,ns_per_op,checksum
+ptrchase,ptrchase,1000000,5,5000000,952672600,190.535,2999997000000
