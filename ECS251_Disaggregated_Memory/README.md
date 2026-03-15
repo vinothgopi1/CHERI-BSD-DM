@@ -43,17 +43,86 @@
     ```
     Ensure all dependencies are met; you may need to install additional packages like `libevent` or others specific to your project.
 
-7. Run the benchmark files:
-    ```
-    
-    ```
-    Ensure all dependencies are met; you may need to install additional packages like `libevent` or others specific to your project.
+7. Compile and run the benchmark files using the CHERI SDK. This will be done on the host. To send the binaries over to CHERI, you can use SSH and the scp command.
+For compiling and running benchmark files on your host, use whatever tools are standard for your host environment.
 
-8. Plot the graphs (Just dependent on the csv files so can be done locally):
+    Ensure the CHERI SDK is available. By default the Makefile expects it at:
+
+        ~/cheri/output/sdk
+
+    Compile the benchmarks using the provided Makefile:
+
+        make
+
+    This will produce the following binaries:
+
+        ptrchase
+        mallocbench
+        rpcbench
+
+    Remove any previous result files:
+
+        rm -f malloc_cheri.csv ptr_cheri.csv rpc_cheri.csv
+
+    Run the malloc benchmark across multiple allocation sizes:
+
+        for s in 16 32 64 128 256 512 1024 4096
+        do
+          echo "Running malloc size $s"
+          ./mallocbench $s 100000 >> malloc_cheri.csv
+        done
+
+    Run the pointer-chasing benchmark across different working set sizes:
+
+        for n in 10000 100000 1000000
+        do
+          echo "Running ptrchase N=$n"
+          ./ptrchase $n 100 >> ptr_cheri.csv
+        done
+
+    For the RPC benchmark, start the server in a separate terminal:
+
+        ./rpcbench server 9090
+
+    Then run the client benchmark:
+
+        for len in 16 64 512 4096 65536
+        do
+          case $len in
+            16|64) iters=20 ;;
+            512) iters=10 ;;
+            4096) iters=5 ;;
+            65536) iters=2 ;;
+          esac
+
+          for batch in 1 4 16
+          do
+            echo "Running len=$len iters=$iters batch=$batch"
+            ./rpcbench client 127.0.0.1 9090 $len $iters $batch >> rpc_cheri.csv
+          done
+        done
+
+    The benchmark results will be written to:
+
+        malloc_cheri.csv
+        ptr_cheri.csv
+        rpc_cheri.csv
+
+8. Plot the graphs (only depends on the generated CSV files, so this can be done locally):
+
+    Run the plotting script:
+
     ```
-    ./plot_benches.py
+    python3 plot_benches.py
     ```
-    Ensure all dependencies are met; you may need to install additional packages like `libevent` or others specific to your project.
+
+    Ensure the required Python dependencies are installed. If not, install them with:
+
+    ```
+    pip install pandas matplotlib
+    ```
+
+    The script will read the benchmark CSV files and generate the corresponding benchmark graphs.
 
 ### Troubleshooting
 - If builds fail, check the CheriBSD documentation at [CTSRD-CHERI](https://github.com/CTSRD-CHERI/cheribsd).
