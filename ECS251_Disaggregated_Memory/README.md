@@ -43,6 +43,18 @@
     ```
     Ensure all dependencies are met; you may need to install additional packages like `libevent` or others specific to your project.
 
+7. Run the benchmark files:
+    ```
+    
+    ```
+    Ensure all dependencies are met; you may need to install additional packages like `libevent` or others specific to your project.
+
+8. Plot the graphs (Just dependent on the csv files so can be done locally):
+    ```
+    ./plot_benches.py
+    ```
+    Ensure all dependencies are met; you may need to install additional packages like `libevent` or others specific to your project.
+
 ### Troubleshooting
 - If builds fail, check the CheriBSD documentation at [CTSRD-CHERI](https://github.com/CTSRD-CHERI/cheribsd).
 - Ensure your CloudLab instance has sufficient resources (RAM, CPU) for compilation.
